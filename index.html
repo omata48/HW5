@@ -31,49 +31,49 @@
     <div class="container" id="calendar">
       <!-- Timeblocks go here -->
       <div class="row time-block">
-        <div class="col-md-1 hour"></div>
-        <textarea class="col-md-10 present 0"></textarea>
-        <button class="col-md-1 saveBtn"><i class="fa fa-bookmark" aria-hidden="true"></i></button>
+        <div class="col-sm-1 hour"></div>
+        <textarea class="col-sm-10 present 0"></textarea>
+        <button class="col-sm-1 saveBtn"><i class="fa fa-bookmark" aria-hidden="true"></i></button>
       </div>
       <div class="row time-block">
-        <div class="col-md-1 hour"></div>
-        <textarea class="col-md-10 present 1"></textarea>
-        <button class="col-md-1 saveBtn"><i class="fa fa-bookmark" aria-hidden="true"></i></button>
+        <div class="col-sm-1 hour"></div>
+        <textarea class="col-sm-10 present 1"></textarea>
+        <button class="col-sm-1 saveBtn"><i class="fa fa-bookmark" aria-hidden="true"></i></button>
       </div>
       <div class="row time-block">
-        <div class="col-md-1 hour"></div>
-        <textarea class="col-md-10 present 2"></textarea>
-        <button class="col-md-1 saveBtn"><i class="fa fa-bookmark" aria-hidden="true"></i></button>
+        <div class="col-sm-1 hour"></div>
+        <textarea class="col-sm-10 present 2"></textarea>
+        <button class="col-sm-1 saveBtn"><i class="fa fa-bookmark" aria-hidden="true"></i></button>
       </div>
       <div class="row time-block">
-        <div class="col-md-1 hour"></div>
-        <textarea class="col-md-10 present 3"></textarea>
-        <button class="col-md-1 saveBtn"><i class="fa fa-bookmark" aria-hidden="true"></i></button>
+        <div class="col-sm-1 hour"></div>
+        <textarea class="col-sm-10 present 3"></textarea>
+        <button class="col-sm-1 saveBtn"><i class="fa fa-bookmark" aria-hidden="true"></i></button>
       </div>
       <div class="row time-block">
-        <div class="col-md-1 hour"></div>
-        <textarea class="col-md-10 present 4"></textarea>
-        <button class="col-md-1 saveBtn"><i class="fa fa-bookmark" aria-hidden="true"></i></button>
+        <div class="col-sm-1 hour"></div>
+        <textarea class="col-sm-10 present 4"></textarea>
+        <button class="col-sm-1 saveBtn"><i class="fa fa-bookmark" aria-hidden="true"></i></button>
       </div>
       <div class="row time-block">
-        <div class="col-md-1 hour"></div>
-        <textarea class="col-md-10 present 5"></textarea>
-        <button class="col-md-1 saveBtn"><i class="fa fa-bookmark" aria-hidden="true"></i></button>
+        <div class="col-sm-1 hour"></div>
+        <textarea class="col-sm-10 present 5"></textarea>
+        <button class="col-sm-1 saveBtn"><i class="fa fa-bookmark" aria-hidden="true"></i></button>
       </div>
       <div class="row time-block">
-        <div class="col-md-1 hour"></div>
-        <textarea class="col-md-10 present 6"></textarea>
-        <button class="col-md-1 saveBtn"><i class="fa fa-bookmark" aria-hidden="true"></i></button>
+        <div class="col-sm-1 hour"></div>
+        <textarea class="col-sm-10 present 6"></textarea>
+        <button class="col-sm-1 saveBtn"><i class="fa fa-bookmark" aria-hidden="true"></i></button>
       </div>
       <div class="row time-block">
-        <div class="col-md-1 hour"></div>
-        <textarea class="col-md-10 present 7"></textarea>
-        <button class="col-md-1 saveBtn"><i class="fa fa-bookmark" aria-hidden="true"></i></button>
+        <div class="col-sm-1 hour"></div>
+        <textarea class="col-sm-10 present 7"></textarea>
+        <button class="col-sm-1 saveBtn"><i class="fa fa-bookmark" aria-hidden="true"></i></button>
       </div>
-      <div class="row time-block">
-        <div class="col-md-1 hour"></div>
-        <textarea class="col-md-10 present 8"></textarea>
-        <button class="col-md-1 saveBtn"><i class="fa fa-bookmark" aria-hidden="true"></i></button>
+      <div class="row time-block" >
+        <div class="col-sm-1 hour"></div>
+        <textarea class="col-sm-10 present 8"></textarea>
+        <button class="col-sm-1 saveBtn"><i class="fa fa-bookmark" aria-hidden="true"></i></button>
       </div>
       
     </div>
@@ -93,6 +93,7 @@
       // console.log(textBoxes);
       // console.log(realTime);
       for (var i = 0; i<timeBlocks.length;i++){
+        timeBlocks[i].setAttribute("index-row",i)
         var timeToSet = i+9;
         var momentTime = moment().set("hour",timeToSet);
         momentTime = momentTime.format("h A");
@@ -102,26 +103,53 @@
         // change background based on if future, or past (present default)
         var iClass = "."+i
         if (timeToSet === realTime){
-          console.log("current time");
+          // console.log("current time");
         }
         else if (timeToSet > realTime){
-          console.log("future of ");
-          console.log(iClass);
+          // console.log("future of ");
+          // console.log($(iClass));
           $(iClass).addClass("future").removeClass("present");
         }
         else if (timeToSet < realTime){
-          console.log("past of ");
-          console.log($(iClass));
+          // console.log("past of ");
+          // console.log($(iClass));
           $(iClass).removeClass("present").addClass("past");
         }
       }
+
+      function saveToDo(event){
+        event.preventDefault();
+        // console.log($(event.target))
+        // console.log($(event.target).parents(".row"))
+        var parentDiv = $(event.target).parents(".row").attr("index-row")
+        var childTextArea = $(event.target).parents(".row").children("textarea").val();
+        console.log(parentDiv);
+        console.log(childTextArea);
+        
+        localStorage.setItem(parentDiv,childTextArea);
+        
+      };
+
+      // need to initialize the table with any stored todos
+      function init(){
+        var storedTodos = [];
+        for (var j = 0; j<timeBlocks.length;j++){
+          var currentText = localStorage.getItem(""+j);
+          if (currentText !== null){
+            $("."+j).text(currentText);            
+          }  
+        }
+      }
+
+
+      $(".saveBtn").on("click",saveToDo);
 
       // clicking on timeblock, user can enter text
       // can be done by making the middle block a text area
 
       // clicking save button, store the infomration in timeblock to the LS
       // right button is a button that takes input from middle block and on click event stores it in LS
-
+      init();
 
     </script>
   </body>
